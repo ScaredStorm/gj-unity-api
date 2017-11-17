@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 using System;
 
 namespace GameJolt.UI.Controllers
@@ -9,24 +8,28 @@ namespace GameJolt.UI.Controllers
 		public InputField usernameField;
 		public InputField tokenField;
 		public Text errorMessage;
+		public Toggle rememberMeToggle;
 
 		Action<bool> signedInCallback;
 		Action<bool> userFetchedCallback;
 
-		override public void Show(Action<bool> callback)
+		public override void Show(Action<bool> callback)
 		{
 			Show(callback, null);
 		}
 
-		public void Show(Action<bool> signedInCallback, Action<bool> userFetchedCallback)
-		{
+		public void Show(Action<bool> signedInCallback, Action<bool> userFetchedCallback) {
 			errorMessage.enabled = false;
 			animator.SetTrigger("SignIn");
 			this.signedInCallback = signedInCallback;
 			this.userFetchedCallback = userFetchedCallback;
+			string username, token;
+			rememberMeToggle.isOn = API.Manager.Instance.GetStoredUserCredentials(out username, out token);
+			usernameField.text = username;
+			tokenField.text = token;
 		}
 
-		override public void Dismiss(bool success)
+		public override void Dismiss(bool success)
 		{
 			animator.SetTrigger("Dismiss");
 			if (signedInCallback != null)
@@ -50,14 +53,11 @@ namespace GameJolt.UI.Controllers
 				animator.SetTrigger("Lock");
 				animator.SetTrigger("ShowLoadingIndicator");
 
-				var user = new GameJolt.API.Objects.User(usernameField.text.Trim(), tokenField.text.Trim());
-				user.SignIn((bool signInSuccess) => {
-					if (signInSuccess)
-					{
+				var user = new API.Objects.User(usernameField.text.Trim(), tokenField.text.Trim());
+				user.SignIn(signInSuccess => {
+					if(signInSuccess) {
 						Dismiss(true);
-					}
-					else
-					{
+					} else {
 						// Technically this could be because of another user being already signed in.
 						errorMessage.text = "Wrong username and/or token.";
 						errorMessage.enabled = true;
@@ -65,13 +65,13 @@ namespace GameJolt.UI.Controllers
 
 					animator.SetTrigger("HideLoadingIndicator");
 					animator.SetTrigger("Unlock");
-				}, (bool userFetchedSuccess) => {
-					if (userFetchedCallback != null) {
+				}, userFetchedSuccess => {
+					if(userFetchedCallback != null) {
 						// This will potentially be called after a user dismissed the window..
 						userFetchedCallback(userFetchedSuccess);
 						userFetchedCallback = null;
 					}
-				});
+				}, rememberMeToggle.isOn);
 			}
 		}
 	}

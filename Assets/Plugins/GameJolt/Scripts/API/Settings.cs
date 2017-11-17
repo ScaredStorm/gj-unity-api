@@ -2,10 +2,10 @@
 
 namespace GameJolt.API
 {
-	[System.Serializable]
 	/// <summary>
 	/// API Settings Config Object.
 	/// </summary>
+	[System.Serializable]
 	public class Settings : ScriptableObject {
 		[Header("Game")]
 		[Tooltip("The game ID. It can be found on the Game Jolt website under Dashboard > YOUR-GAME > Game API > API Settings.")]
@@ -20,10 +20,12 @@ namespace GameJolt.API
 		public bool autoPing = true;
 		[Tooltip("Cache High Score Tables and Trophies information for faster display.")]
 		public bool useCaching = true;
+		[Tooltip("The key used to encrypt the user credentials.")]
+		public string encryptionKey = "";
 
 		[Header("Debug")]
 		[Tooltip("AutoConnect in the Editor as if the game was hosted on GameJolt.")]
-		public bool autoConnect = false;
+		public bool autoConnect;
 		[Tooltip("The username to use for AutoConnect.")]
 		public string user;
 		[Tooltip("The token to use for AutoConnect.")]

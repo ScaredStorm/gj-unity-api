@@ -4,6 +4,20 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][Unreleased]
 
+
+## [2.3.0][v2_3_0] (2017-11-08)
+
+### Add
+- New `GameJolt.API.DataStore.GetKeys(bool global, string pattern, Action<string[]> callback)` method to fetch all datastore keys matching the provided pattern.
+- New "Remember me" functionality for SignIn (user credentials stored in PlayerPrefs with XTEA encryption), see issue #18
+- Demo scenes
+
+### Changed
+- Changed SignIn signature to `void SignIn(Action<bool> signedInCallback = null, Action<bool> userFetchedCallback = null, bool rememberMe = false)`
+
+### Fixed
+- Users.Get(int[] ids, ...) throws an exception #79
+
 ## [2.2.0][v2_2_0] (2017-08-13)
 
 ### Add
@@ -78,7 +92,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 Initial release
 
-[Unreleased]: https://github.com/loicteixeira/gj-unity-api/compare/v2.2.0...HEAD
+[Unreleased]: https://github.com/loicteixeira/gj-unity-api/compare/v2.3.0...HEAD
+[v2_3_0]: https://github.com/loicteixeira/gj-unity-api/tree/v2.3.0
 [v2_2_0]: https://github.com/loicteixeira/gj-unity-api/tree/v2.2.0
 [v2_1_3]: https://github.com/loicteixeira/gj-unity-api/tree/v2.1.3
 [v2_1_2]: https://github.com/loicteixeira/gj-unity-api/tree/v2.1.2
